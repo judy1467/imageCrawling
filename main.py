@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from time import sleep
+from os import mkdir
 
 urls = []
 
@@ -37,7 +38,7 @@ def scroll_page(scroll_cnt):
     initial_height = driver.execute_script("return document.body.scrollHeight")
     first_scrollHeight = 0
 
-    for _ in range(scroll_cnt+1):
+    for _ in range(scroll_cnt + 1):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
         first_scrollHeight += driver.execute_script("return document.body.scrollHeight")
@@ -54,9 +55,15 @@ def scroll_page(scroll_cnt):
 
 def save_img():
     cnt = 0
+    path = './' + keyword + '/'
+    try:
+        mkdir(path)
+    except:
+        pass
+
     for i in range(0, len(urls)):
         try:
-            urllib.request.urlretrieve(urls[i], "./crawled_img/" + str(cnt) + '.jpg')
+            urllib.request.urlretrieve(urls[i], path + str(cnt) + '.jpg')
         except:
             continue
         cnt += 1
