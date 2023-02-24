@@ -33,11 +33,11 @@ def get_image_urls(driver, wait=.1, retry=3):
     return urls
 
 
-def scroll_page():
+def scroll_page(scroll_cnt):
     initial_height = driver.execute_script("return document.body.scrollHeight")
-
     first_scrollHeight = 0
-    while True:
+
+    for _ in range(scroll_cnt+1):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
         first_scrollHeight += driver.execute_script("return document.body.scrollHeight")
@@ -47,6 +47,7 @@ def scroll_page():
         if new_height == initial_height:
             break
         initial_height = new_height
+        sleep(1)
 
     sleep(1.5)
 
@@ -63,12 +64,12 @@ def save_img():
 
 
 keyword = input("검색어: ")
-# cnt = input("페이지 수: ")
+scroll_cnt = int(input("스크롤 수: "))
 
 driver = webdriver.Chrome()
 driver.get('https://search.naver.com/search.naver?where=image&sm=tab_jum&query=' + quote_plus(keyword))
 driver.implicitly_wait(3)
 
-scroll_page()
+scroll_page(scroll_cnt)
 get_image_urls(driver, wait=.1, retry=3)
 save_img()
